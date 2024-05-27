@@ -1,11 +1,17 @@
 package com.ebook.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Date;
 
 public class BookRental {
+    @JsonProperty("rentalsId")
     private int rentalsId;
+    @JsonProperty("book")
     private Book book;
+    @JsonProperty("rentalDate")
     private Date rentalDate;
+    @JsonProperty("returnDate")
     private Date returnDate;
 
     public BookRental(int rentalsId, Book book, Date rentalDate, Date returnDate) {

@@ -1,14 +1,20 @@
 package com.ebook.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 
 public class Book {
+    @JsonProperty("id")
     private int id;
+    @JsonProperty("author")
     private String author;
+    @JsonProperty("title")
     private String title;
-    private int yearOfPublication;
+    @JsonProperty("yearOfPublication")
+    private Integer yearOfPublication;
 
-    public Book(int id, String author, String title, int yearOfPublication) {
+    public Book(int id, String author, String title, Integer yearOfPublication) {
         this.id = id;
         this.author = author;
         this.title = title;

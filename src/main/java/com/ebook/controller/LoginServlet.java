@@ -34,39 +34,30 @@ public class LoginServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
     }
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        if (username != null && !username.isEmpty() && password != null && !password.isEmpty()) {
-            try {
-                if (isValidLogin(username, password, request)) {
-                    response.setStatus(SC_OK);
-                    response.sendRedirect(request.getContextPath() + "/HomeServlet");
-                    return;
-                } else {
-                    response.setStatus(SC_UNAUTHORIZED);
-                    response.sendRedirect(request.getContextPath() + "/login.jsp?error=invalid_credentials");
-                    return;
-                }
-            } catch (SQLException e) {
-                throw new ServletException("Wystąpił błąd podczas weryfikacji logowania", e);
+        User user = new User(0, username, password, null, null, null, 0);
+
+        try {
+            if (isValidLogin(user, request)) {
+                response.setStatus(SC_OK);
+                response.sendRedirect(request.getContextPath() + "/HomeServlet");
+            } else {
+                response.setStatus(SC_UNAUTHORIZED);
+                response.sendRedirect(request.getContextPath() + "/login.jsp?error=invalid_credentials");
             }
-        } else {
-            response.setStatus(SC_BAD_REQUEST);
-            response.sendRedirect(request.getContextPath() + "/login.jsp?error=empty_fields");
-            return;
+        } catch (SQLException e) {
+            throw new ServletException("Wystąpił błąd podczas weryfikacji logowania", e);
         }
     }
 
-
-    private boolean isValidLogin(String username, String password, HttpServletRequest request) throws SQLException {
-        User user = userDAO.getUserByUsername(username);
-        if (user != null && user.getPassword().equals(password)) {
-
-            int userId = user.getId();
-
+    private boolean isValidLogin(User user, HttpServletRequest request) throws SQLException {
+        User fetchedUser = userDAO.getUserByUsername(user.getUsername());
+        if (fetchedUser != null && fetchedUser.getPassword().equals(user.getPassword())) {
+            int userId = fetchedUser.getId();
             HttpSession session = request.getSession();
             session.setAttribute("id", userId);
             return true;

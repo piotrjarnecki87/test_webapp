@@ -36,7 +36,6 @@ public class ConnectionPool {
                 connections.offer(connection);
             }
         } catch (SQLException e) {
-            // Handle connection initialization error
             e.printStackTrace();
         }
     }
@@ -64,7 +63,7 @@ public class ConnectionPool {
                     connection.close();
                 }
             } catch (SQLException e) {
-                // Handle closing connection error
+
                 e.printStackTrace();
             }
         }

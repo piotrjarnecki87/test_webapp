@@ -13,18 +13,14 @@ import java.io.IOException;
 public class LogOutServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Pobieramy sesję
+
         HttpSession session = request.getSession();
-
-        // Usuwamy atrybut sesji zawierający informacje o zalogowanym użytkowniku
         session.removeAttribute("username");
-
-        // Przekierowujemy użytkownika na stronę logowania po wylogowaniu
         request.getRequestDispatcher("/login.jsp").forward(request, response);
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Wywołujemy metodę doGet, aby obsłużyć wylogowanie
+
         doGet(request, response);
     }
 }

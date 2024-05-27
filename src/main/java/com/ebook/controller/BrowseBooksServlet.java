@@ -12,6 +12,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -27,7 +29,7 @@ public class BrowseBooksServlet extends HttpServlet {
     public void init() throws ServletException {
         super.init();
         try {
-            // Load the MySQL JDBC driver
+            
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             // Initialize BookDAOImpl with a connection
@@ -42,7 +44,8 @@ public class BrowseBooksServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            int userId = 1;
+            int userId = getUserIdFromSessionOrDatabase(request);
+
             List<Book> books = bookDAO.getAllBooks(); // Pobranie listy książek z DAO
             List<BookRental> orderedBooks = bookOrderDAO.getOrderedBooksByUserId(userId);
 
@@ -55,6 +58,17 @@ public class BrowseBooksServlet extends HttpServlet {
             e.printStackTrace();
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while retrieving books.");
         }
+    }
+
+    private int getUserIdFromSessionOrDatabase(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Integer userId = (Integer) session.getAttribute("id");
+            if (userId != null) {
+                return userId;
+            }
+        }
+        return -1;
     }
 }
 

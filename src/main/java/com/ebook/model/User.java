@@ -1,18 +1,24 @@
 package com.ebook.model;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class User {
+
     private int id;
+
     private String username;
+
     private String password;
+
     private String firstName;
+
     private String lastName;
+
     private String email;
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public User() {
+    private int phoneNumber;
+    @JsonCreator
+    public User( @JsonProperty("id")int id,  @JsonProperty("username")String username,  @JsonProperty("password")String password,  @JsonProperty("firstName")String firstName,  @JsonProperty("lastName")String lastName,  @JsonProperty("email")String email,  @JsonProperty("phoneNumber")int phoneNumber) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -20,6 +26,10 @@ public class User {
         this.lastName = lastName;
         this.email = email;
         this.phoneNumber = phoneNumber;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getId() {
@@ -34,7 +44,7 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    private int phoneNumber;
+
 
     // Konstruktor
 

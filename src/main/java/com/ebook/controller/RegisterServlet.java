@@ -16,46 +16,43 @@ import java.sql.SQLException;
 @WebServlet(name = "RegisterServlet", urlPatterns = "/RegisterServlet")
 public class RegisterServlet extends HttpServlet {
 
-        private UserDAOImpl userDao; //
+        private UserDAOImpl userDao;
 
         public void init() throws ServletException {
                 super.init();
-                try {
-                        // Load the MySQL JDBC driver
-                        Class.forName("com.mysql.cj.jdbc.Driver");
-
-                        // Initialize BookDAOImpl with a connection
-                        Connection connection = ConnectionPool.getInstance().getConnection();
-                        userDao = new UserDAOImpl(connection);
-
-
-                } catch (ClassNotFoundException e) {
-                        throw new ServletException("Failed to initialize DAO", e);
-                }
+                // Inicjalizacja userDao przy użyciu połączenia z bazą danych
+                Connection connection = ConnectionPool.getInstance().getConnection();
+                userDao = new UserDAOImpl(connection);
         }
 
         @Override
         protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+                // Pobierz dane z formularza rejestracji
                 String username = request.getParameter("username");
                 String password = request.getParameter("password");
                 String firstName = request.getParameter("first_name");
                 String lastName = request.getParameter("last_name");
                 String email = request.getParameter("email");
-                int phoneNumber = request.getIntHeader("phone");
-
-
-                User user = new User();
+                String phone = request.getParameter("phone");
 
                 try {
+                        // Utwórz nowy obiekt użytkownika na podstawie danych z formularza
+                        User user = new User(0, username, password, firstName, lastName, email, Integer.parseInt(phone));
+
+                        // Dodaj użytkownika do bazy danych
                         userDao.addUser(user);
 
                         // Przekieruj użytkownika na stronę logowania po zarejestrowaniu
                         response.sendRedirect(request.getContextPath() + "/login.jsp");
+                } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                        // Obsłuż błąd, jeśli nie udało się przekształcić ciągu znaków na liczbę
+                        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Invalid phone number format.");
                 } catch (SQLException e) {
                         e.printStackTrace();
                         // Obsłuż błąd, jeśli nie udało się zapisać użytkownika
                         response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while registering user.");
                 }
         }
+
 }

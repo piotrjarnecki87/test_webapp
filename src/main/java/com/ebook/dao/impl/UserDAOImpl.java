@@ -16,10 +16,7 @@ public class UserDAOImpl extends AbstractJdbcDao implements UserDAO {
     public UserDAOImpl(Connection connection) {
         this.connection = connection;
     }
-    @Override
-    public void add(Object entity) {
 
-    }
     @Override
     public void addUser(User user) throws SQLException {
         PreparedStatement statement = null;
@@ -43,27 +40,6 @@ public class UserDAOImpl extends AbstractJdbcDao implements UserDAO {
     }
 
     @Override
-    public void update(Object entity) {
-
-    }
-
-    @Override
-    public void delete(int id) {
-
-    }
-
-    @Override
-    public Object getById(int id) {
-        return null;
-    }
-
-    @Override
-    public List getAll() {
-        return null;
-    }
-
-
-    @Override
     public void updateUser(User user) {
 
     }
@@ -72,6 +48,7 @@ public class UserDAOImpl extends AbstractJdbcDao implements UserDAO {
     public void deleteUser(String username) {
 
     }
+
 
     @Override
     public User getUserByUsername(String username) {
@@ -89,14 +66,15 @@ public class UserDAOImpl extends AbstractJdbcDao implements UserDAO {
 
             // Jeśli znaleziono użytkownika, przypisz go do obiektu User
             if (resultSet.next()) {
-                user = new User();
-                user.setId(resultSet.getInt("id"));
-                user.setUsername(resultSet.getString("username"));
-                user.setPassword(resultSet.getString("password"));
-                user.setFirstName(resultSet.getString("first_name"));
-                user.setLastName(resultSet.getString("last_name"));
-                user.setEmail(resultSet.getString("email"));
-                user.setPhoneNumber(resultSet.getInt("phone"));
+                user = new User(
+                        resultSet.getInt("id"),
+                        resultSet.getString("username"),
+                        resultSet.getString("password"),
+                        resultSet.getString("first_name"),
+                        resultSet.getString("last_name"),
+                        resultSet.getString("email"),
+                        resultSet.getInt("phone")
+                );
 
                 // Dodaj więcej pól, jeśli istnieją
             }
@@ -120,6 +98,7 @@ public class UserDAOImpl extends AbstractJdbcDao implements UserDAO {
     public List<User> getAllUsers() {
         return null;
     }
+
 
     @Override
     public boolean isValidLogin(String username, String password) {
@@ -151,6 +130,7 @@ public class UserDAOImpl extends AbstractJdbcDao implements UserDAO {
         }
     }
 
+
     @Override
     public void rentBook(int userId, int bookId, Date rentalDate) throws SQLException {
 
@@ -166,7 +146,6 @@ public class UserDAOImpl extends AbstractJdbcDao implements UserDAO {
 
     }
 
-
     @Override
     protected String getTableName() {
         return null;
@@ -179,6 +158,31 @@ public class UserDAOImpl extends AbstractJdbcDao implements UserDAO {
 
     @Override
     protected Object mapResultSetToEntity(ResultSet resultSet) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public void add(Object entity) {
+
+    }
+
+    @Override
+    public void update(Object entity) {
+
+    }
+
+    @Override
+    public void delete(int id) {
+
+    }
+
+    @Override
+    public Object getById(int id) {
+        return null;
+    }
+
+    @Override
+    public List getAll() {
         return null;
     }
 }

@@ -7,6 +7,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -33,7 +34,8 @@ public class RentBookServlet extends HttpServlet {
         int bookId = Integer.parseInt(request.getParameter(paramName));
 
         // Pobranie identyfikatora użytkownika (może być pobierane z sesji lub z innych danych uwierzytelniających)
-        int userId = 1; // Załóżmy, że identyfikator użytkownika to 1
+        int userId = getUserIdFromSessionOrDatabase(request);
+
 
         try {
             // Dodanie wypożyczenia do bazy danych
@@ -46,5 +48,14 @@ public class RentBookServlet extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while renting the book.");
         }
     }
-
+    private int getUserIdFromSessionOrDatabase(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            Integer userId = (Integer) session.getAttribute("id");
+            if (userId != null) {
+                return userId;
+            }
+        }
+        return -1;
+    }
 }
